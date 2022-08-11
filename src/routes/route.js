@@ -69,5 +69,44 @@ router.post("/test-post-4", function(req, res) {
     arr.push(ele)
     res.send(  { msg: arr , status: true }  )
 })
+//// sol 1
+router.post("/player-api", function (req, res){
+    let newPlayer = req.body.players
+    for(i =0; i<players.length; i++){
+        let newPlayer = players[i]
+        if(newPlayer = players.newPlayer){
+            return res.send("this player exist")
+        }
+    }
+    players.push(newPlayer)
+    res.send({ data:players , status:true })
+})
 
+
+///sol 2
+router.post('/players', function (req, res) {
+    
+    let newPlayer = req.body
+    let newPlayersName = newPlayer.name
+    let isNameRepeated = false
+
+    //let player = players.find(p => p.name == newPlayersName)
+
+    for(let i = 0; i < players.length; i++) {
+        if(players[i].name == newPlayersName) {
+            isNameRepeated = true;
+            break;
+        }
+    }
+
+    //undefined is same as false/ a falsy value
+    if (isNameRepeated) {
+        //Player exists
+        res.send("This player was already added!")
+    } else {
+        //New entry
+        players.push(newPlayer)
+        res.send(players)
+    }
+});
 module.exports = router;
