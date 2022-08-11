@@ -109,4 +109,49 @@ router.post('/players', function (req, res) {
         res.send(players)
     }
 });
+
+
+/// voting question///
+let persons = [
+    {
+        name : "pk",
+        age : 10,
+        votingstatus : false
+    },
+    {
+        name : "SK",
+        age : 20,
+        votingstatus : false
+    },
+    {
+        name : "AA",
+        age : 70,
+        votingstatus : false
+    },
+    {
+        name : "SC",
+        age : 5,
+        votingstatus : false
+    },
+    {
+        name : "HO",
+        age : 40,
+        votingstatus : false
+    }
+]
+
+router.post('/voting', function(req,res){
+        let newPerson = [];
+        let personAge =  req.query.age;
+        for ( i = 0; i<persons.length; i++){
+            if(persons[i].age>personAge){
+                persons[i].votingstatus =true;
+                newPerson.push(persons[i]);
+                
+            }
+    
+        }
+        console.log(newPerson)
+        res.send(newPerson);
+    })
 module.exports = router;
