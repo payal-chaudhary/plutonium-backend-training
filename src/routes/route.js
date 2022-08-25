@@ -9,6 +9,9 @@ router.get("/test-me", function (req, res) {
     res.send("My first ever api!")
 })
 
+router.get("/class-test", function(req,res){
+    res.send("Checking the date,time, ip and url for global middleware")
+})
 
 
 
