@@ -1,6 +1,6 @@
 const blogModel = require('../model/blogModel')
 const authorModel = require('../model/authorModel')
-
+const moment = require('moment')
 const createBlog = async function (req, res) {
     try {
         const blog = req.body;
@@ -13,7 +13,9 @@ const createBlog = async function (req, res) {
         if (!isValidAuthor) {
             return res.send({ status: false, msg: "Author dosen't exist" })
         }
-
+        if(blog.isPublished == true){
+            blog.publishedAt = moment()
+        }
         const saveBlog = await blogModel.create(blog)
         return res.status(201).send({
             status: true,
