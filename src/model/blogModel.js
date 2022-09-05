@@ -36,7 +36,9 @@ const blogSchema = new mongoose.Schema(
             type: Boolean,
             default: false
         },
-        deletedAt: String
+        deletedAt: {
+            type: String,
+            default: ""}
 
     }, { timestamps : true}
 
