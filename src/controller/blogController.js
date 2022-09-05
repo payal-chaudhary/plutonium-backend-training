@@ -28,5 +28,30 @@ const createBlog = async function (req, res) {
     }
 }
 
-module.exports.createBlog = createBlog
+
+const AllBlogsDetails = async function (req, res) {
+    try {
+        let data = await blogModel.find({ ispublished: false, isDeleted: false })
+        if (!data) return res.status(404).send({ status: false, msg: "No Blogs found" })
+        return res.status(200).send({ status: true, msg: data })
+
+    } catch (error) {
+        res.status(500).send({ status: false, msg: error.message })
+    }
+}
+
+const filterBlogsDetails = async function (req, res) {
+    try {
+        let { authorId, category, subcategory,tags} = req.query
+        let data = await blogModel.find({ $:[{authorId:authorId},{category:category},{subcategory:subcategory},{tags:tags}]})
+        let size = data.length
+        if (size < 1) return res.status(404).send({ status: false, msg: "No Blogs found" })
+        return res.status(200).send({ status: true, msg: data })
+
+    } catch (error) {
+        res.status(500).send({ status: false, msg: error.message })
+    }
+}
+
+module.exports = { createBlog, AllBlogsDetails, filterBlogsDetails }
 
