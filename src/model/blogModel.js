@@ -13,7 +13,7 @@ const blogSchema = new mongoose.Schema(
         },
         authorId: {
             type: ObjectId,
-            ref: "",
+            ref: "Author",
             require: true
         },
         tags: [String],
@@ -36,7 +36,9 @@ const blogSchema = new mongoose.Schema(
             type: Boolean,
             default: false
         },
-        deletedAt: String
+        deletedAt: {
+            type: String,
+            default: ""}
 
     }, { timestamps : true}
 
