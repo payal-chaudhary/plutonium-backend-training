@@ -29,6 +29,33 @@ const createBlog = async function (req, res) {
     }
 };
 
+const updateBlog = async function (req, res) {
+    try {
+        const { title, body, tags, subcategory } = req.body;
+        const blogId = req.params.blogId;
+
+        if (!blogId) { return res.status(400).send({ status: false, msg: "Plz enter blogID" }) }
+
+        const isValidBlog = await blogModel.findById(blogId);
+        if (!isValidBlog) { return res.status(404).send({ status: false, msg: "Blog not found" }) }
+
+        if (isValidBlog.isDeleted == true) { return res.status(404).send({ status: false, msg: "Blog Already Deleted" }) }
+
+        const update_Blog = await blogModel.findOneAndUpdate(
+            {_id :blogId},
+            {
+                $set: { title, body, isPublished: true, publishedAt: moment().format() },
+                $push: { tags, subcategory },
+            },
+            { new: true }
+        )
+        return res.status(200).send({ status: true, msg: update_Blog })
+    }
+    catch (err) {
+        return res.status(500).send({ status: false, msg: err.message })
+    }
+}
+
 const blogsDetails = async function (req, res) {
     try {
         let filter = req.query;
