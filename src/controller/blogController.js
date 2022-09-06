@@ -31,21 +31,21 @@ const createBlog = async function (req, res) {
 }
 
 
-const AllBlogsDetails = async function (req, res) {
+const blogsDetails = async function (req, res) {
     try {
-        let data = await blogModel.find({ ispublished: false, isDeleted: false })
-        if (!data) return res.status(404).send({ status: false, msg: "No Blogs found" })
-        return res.status(200).send({ status: true, msg: data })
-
-    } catch (error) {
-        res.status(500).send({ status: false, msg: error.message })
-    }
-}
-
-const filterBlogsDetails = async function (req, res) {
-    try {
-        let { authorId, category, subcategory,tags} = req.query
-        let data = await blogModel.find({ $:[{authorId:authorId},{category:category},{subcategory:subcategory},{tags:tags}]})
+        let filter = req.query
+        let fsize = Object.entries(filter).length
+        if(fsize<1){
+            try {
+                let data = await blogModel.find({ ispublished: true, isDeleted: false })
+                if (!data) return res.status(404).send({ status: false, msg: "No Blogs found" })
+                return res.status(200).send({ status: true, msg: data })
+                
+            } catch (error) {
+                res.status(500).send({ status: false, msg: error.message })
+            }
+        }
+        let data = await blogModel.find(filter);
         let size = data.length
         if (size < 1) return res.status(404).send({ status: false, msg: "No Blogs found" })
         return res.status(200).send({ status: true, msg: data })
@@ -55,5 +55,5 @@ const filterBlogsDetails = async function (req, res) {
     }
 }
 
-module.exports = { createBlog, AllBlogsDetails, filterBlogsDetails }
+module.exports = { createBlog, blogsDetails }
 
