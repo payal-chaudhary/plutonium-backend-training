@@ -16,7 +16,7 @@ email: {
     required:true,
     unique:true,
     match: [
-        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, ///regex///
         "Please fill a valid email address"
       ]
   }, 
