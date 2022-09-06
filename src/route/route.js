@@ -1,16 +1,13 @@
 const express =require("express");
 const router = express.Router();
-const author = require("../controller/authorController")
-const blog = require('../controller/blogController')
-const authorModel = require('../model/authorModel')
-const blogModel = require('../model/blogModel')
+const createAuthor = require("../controller/authorController")
+const {createBlog, AllBlogsDetails, filterBlogsDetails} = require('../controller/blogController')
 
-router.post("/authors", author.createAuthor )
-router.post("/blogs", blog.createBlog )
 
-router.get("/blog" ,async function(req,res){
-    const getAuthor = await blogModel.find().populate('authorId')
-    res.send(getAuthor)
-})
+router.post("/authors", createAuthor )
+router.post("/blogs", createBlog )
+router.get("/getAllBlogs", AllBlogsDetails )
+router.get("/getBlogs", filterBlogsDetails )
+
 
 module.exports= router;
