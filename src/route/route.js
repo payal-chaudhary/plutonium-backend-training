@@ -7,7 +7,7 @@ const {createBlog, blogsDetails, deleteBlogByParams, deleteBlogByQuery, updateBl
 
 router.post("/authors", createAuthor)
 router.post("/blogs", createBlog)
-router.get("/getBlogs", blogsDetails)
+router.get("/blogs", blogsDetails)
 router.put("/blogs/:blogId", updateBlog)
 router.delete("/blogs/:blogId", deleteBlogByParams)
 router.delete("/blogs", deleteBlogByQuery)
