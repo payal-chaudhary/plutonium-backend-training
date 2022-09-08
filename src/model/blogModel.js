@@ -1,8 +1,7 @@
 const mongoose = require('mongoose')
 const ObjectId = mongoose.Schema.Types.ObjectId
 
-const blogSchema = new mongoose.Schema(
-    {
+const blogSchema = new mongoose.Schema({
         title: {
             type: String,
             required: true
@@ -29,8 +28,8 @@ const blogSchema = new mongoose.Schema(
             default: false
         },
         publishedAt: {
-            type : String,
-            default :""
+            type: String,
+            default: ""
         },
         isDeleted: {
             type: Boolean,
@@ -38,10 +37,13 @@ const blogSchema = new mongoose.Schema(
         },
         deletedAt: {
             type: String,
-            default: ""}
+            default: ""
+        }
 
-    }, { timestamps : true}
+    }, {
+        timestamps: true
+    }
 
 )
 
-module.exports = mongoose.model("blog" ,blogSchema)
+module.exports = mongoose.model("blog", blogSchema)
