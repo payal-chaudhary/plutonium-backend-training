@@ -4,17 +4,17 @@ const authorModel = require("../model/authorModel");
 const createBlog = async function (req, res) {
   try {
     const blog = req.body;
-    const authorId = blog.authorId;
+    blog.authorId = req.token.authorId;
 
-    if (!authorId) {
-      return res.send({ status: false, msg: "Plz enter author id" });
-    }
-    const isValidAuthor = await authorModel.findById(authorId);
-    if (!isValidAuthor) {
-      return res.send({ status: false, msg: "Author dosen't exist" });
-    }
+    // if (!authorId) {
+    //   return res.send({ status: false, msg: "Plz enter author id" });
+    // }
+    // const isValidAuthor = await authorModel.findById(authorId);
+    // if (!isValidAuthor) {
+    //   return res.send({ status: false, msg: "Author dosen't exist" });
+    // }
     if (blog.isPublished == true) {
-      blog.publishedAt = moment();
+      blog.publishedAt = Date();
     }
     const saveBlog = await blogModel.create(blog);
     return res.status(201).send({
@@ -123,7 +123,7 @@ const deleteBlogByParams = async function (req, res) {
         .status(404)
         .send({ status: false, msg: "Blog already published" });
     }
-    let updatedId = await blogModel.updateOne(
+    let updatedId = await blogModel.updateMany(
       { _id: blogId },
       { $set: { isDeleted: true, deletedAt: Date() } }, ///Date shows indian time format
       { new: true }

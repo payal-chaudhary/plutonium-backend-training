@@ -32,32 +32,38 @@ const authenticate = function (req, res, next) {
 /////Authorization/////
 
 const authorise = async function (req, res, next) {
-  
+
   let getBlogByParam = req.params.blogId;
   if (!getBlogByParam) {
-    let getBlogByQuery = req.query;
-    if(Object.keys(getBlogByQuery).length==0){
-      return res.status(400).send({ status: false, msg: "data should be provided" });
-    }
-    if (getBlogByQuery.authorId == req.token.authorId) {
-      next();
-    }
-    if (getBlogByQuery.authorId != req.token.authorId) {
-      return res.status(401).send({ status: false, msg: "permission denied" })
-    }
-    getBlogByQuery.authorId = req.token.authorId;
-    let getBlogId = await blogModel.find(getBlogByQuery);
-    if (getBlogId.length==0) {
-      return res.status(401).send({ status: false, msg: "permission denied" });
-    }
-    next();
+    return res.status(400).send({ status: false, msg: "provide blogId" });
   }
   let getBlogId = await blogModel.findById(getBlogByParam);
-    if (!getBlogId) {
-      return res.status(401).send({ status: false, msg: "permission denied" });
-    }
-    next();
+  if (!getBlogId) {
+    return res.status(404).send({ status: false, msg: "Invalid blogId" });
+  }
+  if (getBlogId.authorId !== req.token.authorId) {
+    return res.status(403).send({ status: false, msg: "Permission denied" });
+  }
+  next();
 };
 
 
-module.exports = { authenticate, authorise };
+
+const authorise2 = async function (req, res, next) {
+
+  let getBlogByQuery = req.query;
+  if (Object.keys(getBlogByQuery).length == 0) {
+    return res.status(400).send({ status: false, msg: "data should be provided" });
+  }
+  if(!getBlogByQuery.authorId){
+    return res.status(400).send({ status: false, msg: "Please provide authorId" })
+  }
+  if (getBlogByQuery.authorId !== req.token.authorId) {
+    return res.status(400).send({ status: false, msg: "Permission Denied" })
+  }
+  next();
+}
+
+
+
+module.exports = { authenticate, authorise, authorise2 };
