@@ -12,6 +12,8 @@ router.get("/blogs", blogsDetails)
 router.put("/blogs/:blogId", authenticate, authorise, updateBlog)
 router.delete("/blogs/:blogId", authenticate, authorise, deleteBlogByParams)
 router.delete("/blogs", authenticate, authorise, deleteBlogByQuery)
+//router.delete("/blogs",deleteBlogByQuery)
+
 
 
 module.exports = router;

@@ -3,10 +3,15 @@ const mongoose = require("mongoose")
 const authorSchema= new mongoose.Schema({ 
 fname: {
     type: String,
-    required:true}, 
+    required:true,
+    match:[/^a-z$/i,
+          "Please enter Vaild name(use only alphabtes)"]
+        }, 
 lname: {
     type:String,
-    required:true
+    required:true,
+    match:[/^a-z$/i,
+    "Please enter Vaild name(use only alphabtes)"]
 }, 
 title: {
     type:String,
@@ -22,7 +27,7 @@ email: {
   }, 
 password: {
     type: String,
-    required:true
+    required:true,
 }}, { timestamps:true});
 
 module.exports= mongoose.model("Author", authorSchema)
