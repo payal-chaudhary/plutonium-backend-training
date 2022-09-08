@@ -42,6 +42,9 @@ const authorise = async function (req, res, next) {
     if (getBlogByQuery.authorId == req.token.authorId) {
       next();
     }
+    if (getBlogByQuery.authorId != req.token.authorId) {
+      return res.status(401).send({ status: false, msg: "permission denied" })
+    }
     getBlogByQuery.authorId = req.token.authorId;
     let getBlogId = await blogModel.find(getBlogByQuery);
     if (getBlogId.length==0) {
