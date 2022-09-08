@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const blogModel = require("../model/blogModel")
 
 //////Authenticate//////
 
@@ -25,13 +26,30 @@ const authenticate = function (req, res, next) {
 
 /////Authorization/////
 
-const authorise = function (req, res, next) {
-
-  let requestedId = req.query.authorId
-  if (requestedId !== req.token.authorId) {
-    return res.status(401).send({ status: false, msg: "permission denied" })
+const authorise = async function (req, res, next) {
+  
+  let getBlogByParam = req.params.blogId;
+  if (!getBlogByParam) {
+    let getBlogByQuery = req.query;
+    if(Object.keys(getBlogByQuery).length==0){
+      return res.status(400).send({ status: false, msg: "data should be provided" });
+    }
+    if (getBlogByQuery.authorId == req.token.authorId) {
+      next();
+    }
+    getBlogByQuery.authorId = req.token.authorId;
+    let getBlogId = await blogModel.find(getBlogByQuery);
+    if (getBlogId.length==0) {
+      return res.status(401).send({ status: false, msg: "permission denied" });
+    }
+    next();
   }
-  next()
-}
+  let getBlogId = await blogModel.findById(getBlogByParam);
+    if (!getBlogId) {
+      return res.status(401).send({ status: false, msg: "permission denied" });
+    }
+    next();
+};
+
 
 module.exports = { authenticate, authorise }

@@ -155,6 +155,7 @@ const deleteBlogByQuery = async function (req, res) {
                 deletedAt: Date(),
             }
         );
+        
         if (count == blog.length) {
             return res.status(200).send({
                 status: true,
