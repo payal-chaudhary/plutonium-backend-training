@@ -73,13 +73,11 @@ const authorise2 = async function(req, res, next) {
             msg: "data should be provided"
         });
     }
-    if (!getBlogByQuery.authorId) {
-        return res.status(400).send({
-            status: false,
-            msg: "Please provide authorId"
-        })
-    }
-    if (getBlogByQuery.authorId !== req.token.authorId) {
+    let allAuthorId= await blogModel.find(getBlogByQuery).select({authorId:1,_id:0 })
+    let filterAuthorId= allAuthorId.filter(index => index.authorId==req.token.authorId)
+  
+    
+    if (filterAuthorId.length <1) {
         return res.status(400).send({
             status: false,
             msg: "Permission Denied"
@@ -87,8 +85,6 @@ const authorise2 = async function(req, res, next) {
     }
     next();
 }
-
-
 
 module.exports = {
     authenticate,
