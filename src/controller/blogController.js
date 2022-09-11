@@ -100,12 +100,12 @@ const updateBlog = async function(req, res) {
        
        if(isValid(filterQuery.tags)) {
        const tag = filterQuery.tags.split(',').map(tag => tag);
-       filterQuery['tags'] = {$all: tag}
+       filterQuery['tags'] = {$each: tag}
        }
                
        if(isValid(filterQuery.subcategory)) {
        const subcat = filterQuery.subcategory.split(',').map(subcat => subcat);
-       filterQuery['subcategory'] = {$all: subcat}
+       filterQuery['subcategory'] = {$each: subcat}
        }
 
        
