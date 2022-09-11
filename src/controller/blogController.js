@@ -1,21 +1,29 @@
 const blogModel = require("../model/blogModel");
 const authorModel = require("../model/authorModel");
-const { isValid } = require("./authorController");
+const {
+    isValid
+} = require("./authorController");
 
 // create blog api
-const createBlog = async function (req, res) {
+const createBlog = async function(req, res) {
     try {
         const blog = req.body;
         blog.authorId = req.token.authorId;
 
         if (isValid(blog.title) == false) {
-            return res.send({ msg: "provide valid fanme" });
+            return res.send({
+                msg: "provide valid fanme"
+            });
         }
         if (isValid(blogs.body) == false) {
-            return res.send({ msg: "provide valid lname" });
+            return res.send({
+                msg: "provide valid lname"
+            });
         }
         if (isValid(blog.category) == false) {
-            return res.send({ msg: "provide valid email" });
+            return res.send({
+                msg: "provide valid email"
+            });
         }
 
         if (blog.isPublished == true) {
@@ -36,17 +44,28 @@ const createBlog = async function (req, res) {
 };
 
 // get blog details api
-const blogsDetails = async function (req, res) {
+const blogsDetails = async function(req, res) {
     try {
         let data = req.query;
-        let filter = { $and: [{ isDeleted: false, isPublished: true, ...data }] };
+        let filter = {
+            $and: [{
+                isDeleted: false,
+                isPublished: true,
+                ...data
+            }]
+        };
         // console.log(filter);
         let blogsPresent = await blogModel.find(filter)
 
         if (blogsPresent.length === 0) {
-            res.status(404).send({ msg: "No blogs is present" })
+            res.status(404).send({
+                msg: "No blogs is present"
+            })
         } else {
-            res.status(200).send({ status: true, data: blogsPresent })
+            res.status(200).send({
+                status: true,
+                data: blogsPresent
+            })
         }
 
     } catch (error) {
@@ -58,15 +77,18 @@ const blogsDetails = async function (req, res) {
 };
 
 //update blog api
-const updateBlog = async function (req, res) {
+const updateBlog = async function(req, res) {
     try {
 
         const filterQuery = req.body
         if (Object.entries(filterQuery).length == 0) {
-            return res.send({ status: false, msg: "Please provide details to be updated" })
+            return res.send({
+                status: false,
+                msg: "Please provide details to be updated"
+            })
         }
 
-    
+
         const blogId = req.params.blogId;
         const isValidBlog = await blogModel.findById(blogId)
 
@@ -111,8 +133,12 @@ const updateBlog = async function (req, res) {
                 publishedAt: Date(),
             },
             $push: {
-                tags: { $each: filterQuery.tags },
-                subcategory: { $each: filterQuery.subcategory }
+                tags: {
+                    $each: filterQuery.tags
+                },
+                subcategory: {
+                    $each: filterQuery.subcategory
+                }
             },
         }, {
             new: true
@@ -132,7 +158,7 @@ const updateBlog = async function (req, res) {
 };
 
 //delete blog by blogId
-const deleteBlogByParams = async function (req, res) {
+const deleteBlogByParams = async function(req, res) {
     try {
         let blogId = req.params.blogId;
 
@@ -170,8 +196,7 @@ const deleteBlogByParams = async function (req, res) {
                 isDeleted: true,
                 deletedAt: Date()
             }
-        }
-        );
+        });
 
         return res.status(200).send({
             status: true,
@@ -186,7 +211,7 @@ const deleteBlogByParams = async function (req, res) {
 };
 
 //delete blog by query
-const deleteBlogByQuery = async function (req, res) {
+const deleteBlogByQuery = async function(req, res) {
     try {
         let data = req.query;
         let size = Object.entries(data).length;
