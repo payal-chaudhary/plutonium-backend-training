@@ -14,7 +14,7 @@ router.post("/blogs",middleware.authenticate, blogController.createBlog)
 
 router.get("/blogs",middleware.authenticate, blogController.blogsDetails)
 
-router.put("/blogs/:blogId", middleware.authenticate, middleware.authorise, blogController.updateBlog)
+router.put("/blogs/:blogId", blogController.updateBlog)
 
 router.delete("/blogs/:blogId", middleware.authenticate, middleware.authorise, blogController.deleteBlogByParams)
 

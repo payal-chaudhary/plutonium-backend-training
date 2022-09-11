@@ -19,47 +19,53 @@ const createAuthor = async function (req, res) {
       });
     }
     if (isValid(data.fname) == false) {
-      return res.send({ msg: "provide valid fname" });
-    }
-    let isValidFname = validator.isAlpha(data.fname);
-    if (isValidFname == false) {
-      return res.status(400).send({
-        status: false,
-        msg: "First Name Should contain only alphabets",
-      });
+      return res.status(400).send({status : false , msg: "fname is required" });
     }
     if (isValid(data.lname) == false) {
-      return res.send({ msg: "provide valid lname" });
+      return res.status(400).send({status : false , msg: "lname is required" });
     }
 
+    let isValidFname = validator.isAlpha(data.fname);
     let isValidLname = validator.isAlpha(data.lname);
-    if (isValidLname == false) {
+    if (isValidFname == false || isValidLname == false) {
       return res.status(400).send({
         status: false,
-        msg: "last Name Should contain only alphabets",
+        msg: "First Name & Last Name Should contain only alphabets",
       });
     }
+    if (isValid(data.title) == false) {
+      return res.status(400).send({status : false , msg: "title is required" });
+    }
     if (isValid(data.email) == false) {
-      return res.send({ msg: "provide valid email" });
+      return res.status(400).send({status : false , msg: "email is required" });
     }
     if (isValid(data.password) == false) {
-        return res.send({ msg: "provide valid password" });
-    }
-    if (isValid(data.title) == false) {
-        return res.send({ msg: "provide valid title" });
+      return res.status(400).send({status : false , msg: "passord is required" });
     }
 
     let isValidEmail = validator.isEmail(data.email);
-    if (isValidEmail == false) {
+
+
+    if (isValidEmail) {
+      const isPresent = await authorModel.findOne({ email: data.email })
+      if (isPresent) {
+        return res.status(400).send({ status: false, msg: "author is already present with this email id" })
+      }
+      else {
+        let saveData = await authorModel.create(data);
+        res.status(201).send({
+          status: true,
+          msg: saveData,
+        });
+      }
+    }
+    else {
       return res.status(400).send({
         status: false,
         msg: "plz enter valid email",
       });
     }
-    let saveData = await authorModel.create(data);
-    res.status(200).send({
-      msg: saveData,
-    });
+
   } catch (err) {
     console.log(err);
     res.status(500).send({
@@ -73,19 +79,13 @@ const login = async function (req, res) {
   try {
     const data = req.body;
 
-    if (!data.email) {
-      return res.status(400).send({
-        status: false,
-        msg: "Email is mandatory",
-      });
+    if (isValid(data.email) == false) {
+      return res.status(400).send({status : false , msg: "email is required" });
+    }
+    if (isValid(data.password) == false) {
+      return res.status(400).send({status : false , msg: "passord is required" });
     }
 
-    if (!data.password) {
-      return res.status(400).send({
-        status: false,
-        msg: "Password is mandatory",
-      });
-    }
     let isValidEmail = validator.isEmail(data.email);
     if (isValidEmail == false) {
       return res.status(400).send({
@@ -100,7 +100,7 @@ const login = async function (req, res) {
     if (!user) {
       return res.status(404).send({
         status: false,
-        msg: "User not found",
+        msg: "author not found",
       });
     }
 

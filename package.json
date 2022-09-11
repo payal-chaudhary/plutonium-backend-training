@@ -1,5 +1,5 @@
 {
-    "name": "src",
+    "name": "Project 1 : Blogging Site",
     "version": "1.0.0",
     "description": "Backend cohort for Plutonium(July-Nov)",
     "main": "index.js",
@@ -7,7 +7,7 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "nodemon src/index.js"
     },
-    "author": "",
+    "author": "Vikas Yadav , Payal Chaudhary , Nilesh Bhoi , Mani Ratna Monu",
     "license": "ISC",
     "dependencies": {
         "body-parser": "^1.19.0",
