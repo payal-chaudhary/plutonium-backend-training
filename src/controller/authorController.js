@@ -45,6 +45,15 @@ const createAuthor = async function(req, res) {
                 msg: "title is required"
             });
         }
+
+        const titleEx= ["Mr", "Mrs", "Miss"];
+        const isValidTitle = titleEx.includes(data.title);
+        if( isValidTitle== false){
+          return res.status(400).send({
+            status: false,
+            msg: "enter valid title like -> Mr , Mrs ,Miss"
+        });
+        }
         if (isValid(data.email) == false) {
             return res.status(400).send({
                 status: false,
