@@ -6,14 +6,6 @@ const createBlog = async function(req, res) {
     try {
         const blog = req.body;
         blog.authorId = req.token.authorId;
-
-        // if (!authorId) {
-        //   return res.send({ status: false, msg: "Plz enter author id" });
-        // }
-        // const isValidAuthor = await authorModel.findById(authorId);
-        // if (!isValidAuthor) {
-        //   return res.send({ status: false, msg: "Author dosen't exist" });
-        // }
         if (blog.isPublished == true) {
             blog.publishedAt = Date();
         }
@@ -183,7 +175,7 @@ const deleteBlogByParams = async function(req, res) {
                     isDeleted: true,
                     deletedAt: Date()
                 }
-            }, ///Date shows indian time format
+            },
             {
                 new: true
             }

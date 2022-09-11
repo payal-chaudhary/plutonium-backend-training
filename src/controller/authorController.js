@@ -6,6 +6,11 @@ const validator = require('validator')
 const createAuthor = async function(req, res) {
     try {
         let data = req.body
+        if(Object.entries(data).length==0){
+            return res.status(400).send({
+                status: false,
+                msg: "data should be provided"})
+        }
         let isValidFname = validator.isAlpha(data.fname)
         if (isValidFname == false) {
             return res.status(400).send({
@@ -91,7 +96,7 @@ const login = async function(req, res) {
 
         return res.status(200).send({
             status: true,
-            msg: token
+            msg: {"token":token}
         })
     } catch (err) {
         return res.status(500).send({

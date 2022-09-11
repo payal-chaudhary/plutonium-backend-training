@@ -53,7 +53,7 @@ const authorise = async function(req, res, next) {
             msg: "Invalid blogId"
         });
     }
-    if (getBlogId.authorId !== req.token.authorId) {
+    if (getBlogId.authorId != req.token.authorId) {
         return res.status(403).send({
             status: false,
             msg: "Permission denied"
