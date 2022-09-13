@@ -12,30 +12,30 @@ const createBlog = async function(req, res) {
 
         if (isValid(blog.title) == false) {
             return res.send({
-                msg: "provide valid fanme"
+                msg: "provide valid title"
             });
         }
-        if (isValid(blogs.body) == false) {
+        if (isValid(blog.body) == false) {
             return res.send({
-                msg: "provide valid lname"
+                msg: "provide valid body"
             });
         }
         if (isValid(blog.category) == false) {
             return res.send({
-                msg: "provide valid email"
+                msg: "provide valid category"
             });
         }
 
         if (blog.isPublished == true) {
             blog.publishedAt = Date();
-        }
+    
         const saveBlog = await blogModel.create(blog);
         return res.status(201).send({
             status: true,
             data: saveBlog,
         });
 
-    } catch (err) {
+    } }catch(err) {
         return res.status(400).send({
             status: false,
             msg: err.message,
@@ -189,7 +189,7 @@ const deleteBlogByParams = async function(req, res) {
                 msg: "Blog already published"
             });
         }
-        let updatedId = await blogModel.FindOneAndUpdate({
+        let updatedId = await blogModel.findOneAndUpdate({
             _id: blogId
         }, {
             $set: {
