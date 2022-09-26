@@ -89,6 +89,15 @@ const createUser = async function (req, res) {
     if (addWithPin.length < 6 || addWithPin.length > 6) {
       return res.status(400).send({ status: false, message: "length of pincode is not correct" });
     }
+    if (Object.keys(data).includes('address')) {
+      if (typeof address !== "object") return res.status(400).send({ status: false, message: "address should be an object" })
+
+      if (Object.keys(address).length == 0) {
+        return res.status(400).send({
+          status: false, message: "address should not be empty",
+        });
+      }
+    }
 
     let userData = await userModel.create(data);
     return res.status(201).send({ status: true, data: userData });

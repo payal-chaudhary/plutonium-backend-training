@@ -22,7 +22,7 @@ let createReview = async function (req, res) {
         return res.status(400).send({ status: false, message: "Invalid book Id." })
   
   
-      let { review, rating, reviewedBy, reviewedAt } = reviewData;
+      let { review, rating, reviewedBy} = reviewData;
 
       reviewData.bookId = bookId
       if (!Object.keys(reviewData).length) {
@@ -45,7 +45,7 @@ let createReview = async function (req, res) {
         return res.status(400).send({ status: false, message: 'Rating should be between 1 and 5 inclusively.' })
       }
 
-      if (!reviewedAt) {
+      if (!reviewedBy) {
         return res.status(400).send({ status: false, message: "ReviewAt required name should not be empty." });
       }
   
@@ -90,14 +90,21 @@ const updateReview = async function (req, res) {
             return res.status(400).send({status : false, message : "reviewId is not valid"})
         }
 
-        let findBook = await bookModel.findOne({_id : bookId, isDeleted : false})
+        let findBook = await bookModel.findOne({_id : bookId})
         if(!findBook){
             return res.status(404).send({ status : false, message : "BookId is not found"})
         }
+        if(findBook.isDeleted==true){
+          return res.status(404).send({ status: false, message: 'Cannot Update! The book is deleted before.' });
+        }
 
-        let findReview = await reviewModel.findOne({_id : reviewId, isDeleted : false})
+        let findReview = await reviewModel.findOne({_id : reviewId})
         if(!findReview){
             return res.status(404).send({ status: false, message : " This review is not found"})
+        }
+        if(findReview.isDeleted==true){
+          return res.status(404).send({ status: false, message : " This review is already deleted"})
+
         }
 
         let data = req.body 
@@ -114,7 +121,7 @@ const updateReview = async function (req, res) {
             }
         }
         
-        let updatedReview = await reviewModel.findByIdAndUpdate({ _id: reviewId, isDeleted: false },req.body, {new : true}).select({_id : 1, bookId : 1, reviewedBy:1, reviewedAt:1, rating:1, review:1})
+        let updatedReview = await reviewModel.findByIdAndUpdate({ _id: reviewId, isDeleted: false },{$set: req.body}, {new : true}).select({_id : 1, bookId : 1, reviewedBy:1, reviewedAt:1, rating:1, review:1})
         let object ={
             _id: findBook._id,
                 title: findBook.title,

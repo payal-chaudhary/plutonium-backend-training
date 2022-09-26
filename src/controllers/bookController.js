@@ -1,11 +1,15 @@
 const mongoose = require('mongoose')
 const bookModel = require('../models/bookModel')
 const reviewModel = require("../models/reviewModel")
-const validator = require('validator')
 
 
-let isValid = mongoose.Types.ObjectId.isValid
+let isValid = mongoose.Types.ObjectId.isValid()
 
+const isValidBody = function (value) {
+    if (typeof value === "undefined" || value === null) return false;
+    if (typeof value === "string" && value.trim().length === 0) return false;
+    return true;
+};
 
 
 //=====================================================CREATE BOOK ===============================================================================================//
@@ -85,13 +89,14 @@ const createBook = async function (req, res) {
             }
         }
 
-        if (!releasedAt){
+        if (isValidBody(releasedAt)){
              return res.status(400).send({ status: false, msg: "Please Provide releasedAt" })
             }
 
-        if (!releasedDate.test(releasedAt)) {
-            return res.status(400).send({ status: false, message: "Released Date Format Should be in 'YYYY-MM-DD' Format " });
-        }
+        let validReleasedAt=moment(`${releasedAt}`,"YYYY-MM-DD")
+        if (validReleasedAt==false)
+        return res.status(400).send({ status: false, message: 'releseAt should be in YYYY-MM-DD format.' });
+    
 
         let bookData = await bookModel.create(data)
         return res.status(201).send({ status: true, message: "success", data: bookData })
@@ -242,8 +247,11 @@ const deletedByParams = async function (req, res) {
         if (!findBookId) {
             return res.status(404).send({ status: false, message: "Book does not exists" });
         }
-
-        let findData = await bookModel.findOneAndUpdate({ _id: bookId }, { isDeleted: true, deletedAt: Date.now() }, { new: true }).select({ isDeleted: 1, deletedAt: 1 });
+        if(findBookId.isDeleted==true){
+            return res.status(404).send({ status: false, message: "Book already deleted" });
+        }
+        
+        let findData = await bookModel.findOneAndUpdate({ _id: bookId }, { $set:{isDeleted: true, deletedAt: Date.now()} }, { new: true }).select({ isDeleted: 1, deletedAt: 1 });
         res.status(200).send({ status: true, message: "Book deletion is successful", data: findData });
 
     } catch (error) {
